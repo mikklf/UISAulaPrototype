@@ -11,12 +11,10 @@ Login = Blueprint('Login', __name__)
 @Login.route("/")
 @Login.route("/home")
 def home():
-    print(current_user.is_authenticated)
     if current_user.is_authenticated:
         posts = get_posts_for_user(current_user.get_id())
     else:
         posts = []
-    print(posts)
     return render_template('home.html', posts=posts)
 
 

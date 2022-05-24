@@ -131,4 +131,15 @@ def select_users_by_email(email):
     return user
 
 def get_posts_for_user(user_id):
-    return []
+    cur = conn.cursor()
+    sql_call = """
+    SELECT * FROM posts
+    WHERE group_id in (
+        SELECT group_id FROM users_groups
+        WHERE user_id = %s
+    )
+    """
+    cur.execute(sql_call, (user_id,))
+    user = [Post(i) for i in cur.fetchmany(50)] if cur.rowcount > 0 else []
+    cur.close()
+    return user
