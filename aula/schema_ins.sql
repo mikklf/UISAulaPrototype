@@ -12,7 +12,7 @@ INSERT INTO public.groups(group_id, name, leaveable, parents_can_post) VALUES
     (1000, 'fodbold', TRUE, TRUE), 
     (1001,'3a', FALSE, TRUE);
 
-INSERT INTO users_groups (user_id, group_id) VALUES (5000, 1000), (5000, 1001)
+INSERT INTO users_groups (user_id, group_id) VALUES (5000, 1000), (5000, 1001);
 
 INSERT INTO threads(thread_id ,title, group_id, creator_id) VALUES 
     (2000, 'Anbefalinger til fodboldsko?', 1000, 5000);
