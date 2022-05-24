@@ -78,7 +78,16 @@ class User(tuple, UserMixin):
 #
 # SQL
 #
-
+def get_user_by_id(id):
+    cur = conn.cursor()
+    sql = """
+    SELECT * FROM users
+    WHERE id = %s
+    """
+    cur.execute(sql, (id,))
+    user = Customers(cur.fetchone()) if cur.rowcount > 0 else None;
+    cur.close()
+    return user
 
 
 
