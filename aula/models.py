@@ -109,21 +109,6 @@ def select_users_by_email(email):
     cur.execute(sql_call, (email,))
     user = User(cur.fetchone()) if cur.rowcount > 0 else None
     cur.close()
-<<<<<<< HEAD
-    return 
-
-
-=======
     return user
 
-def get_posts_for_user(user_id):
-    cur = conn.cursor()
-    sql_call = """
-    SELECT * FROM posts
-    """
-    cur.execute(sql_call, ())
-    posts = [Post(i) for i in cur.fetchmany(10)]
-    print(posts)
-    cur.close()
-    return posts
->>>>>>> 44c5063a11505828679f1ebd8455debca1f8cf84
+
