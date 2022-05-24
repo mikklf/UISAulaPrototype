@@ -110,5 +110,3 @@ def select_users_by_email(email):
     user = User(cur.fetchone()) if cur.rowcount > 0 else None
     cur.close()
     return user
-
-
