@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS users (
     last_name varchar(64) NOT NULL,
     password varchar(120) NOT NULL,
     email varchar(64) NOT NULL,
-    addresse varchar(64) NOT NULL,
+    address varchar(64) NOT NULL,
     role varchar(64) NOT NULL CHECK ( role in ('student', 'parent', 'teacher') )
 );
 
