@@ -68,10 +68,24 @@ class User(tuple, UserMixin):
     def get_id(self):
            return (self.user_id)
 
+    def get_groups(self):
+        cur = conn.cursor()
+        sql_call = f"""
+        SELECT groups.* FROM users_groups JOIN groups ON users_groups.group_id = groups.group_id WHERE users_groups.user_id = {self.user_id}
+        """
+        cur.execute(sql_call)
+        groups = cur.fetchall()
+        result = []
+        for group_data in groups:
+            result.append(Group(group_data))
+        cur.close()
+        return result 
+
+
 def insert_users(user_id, first_name, last_name, password, email, adresse, role):
     cur = conn.cursor()
     sql_call = """
-    INSERT INTO Customers(user_id, first_name, last_name, password, email, adresse, role)
+    INSERT INTO users(user_id, first_name, last_name, password, email, adresse, role)
     VALUES (%s, %s, %s, %s, %s, %s, %s)
     """
     cur.execute(sql_call, (user_id, first_name, last_name, password, email, adresse, role))
@@ -99,4 +113,6 @@ def select_users_by_email(email):
     cur.execute(sql_call, (email,))
     user = User(cur.fetchone()) if cur.rowcount > 0 else None
     cur.close()
-    return user
+    return 
+
+
