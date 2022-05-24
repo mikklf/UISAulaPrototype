@@ -1,7 +1,7 @@
 # write all your SQL queries in this file.
-from aula import conn, login_manager
 from flask_login import UserMixin
-from psycopg2 import sql
+
+from aula import conn, login_manager
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -62,7 +62,7 @@ class User(tuple, UserMixin):
         self.role = user_data[6]
 
     def get_id(self):
-           return (self.user_id)
+        return self.user_id
 
 def insert_users(user_id, first_name, last_name, password, email, adresse, role):
     cur = conn.cursor()
