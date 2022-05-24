@@ -19,7 +19,7 @@ INSERT INTO threads(thread_id ,title, group_id, creator_id) VALUES
 
 INSERT INTO messages (message_id, content, thread_id, author_id) VALUES (4000,'Eleverne har ondt i fødderne når de spiller fodbild. Hvem kender et godt skomærke?', 2000, 5000);
 
-INSERT INTO users_threads (user_id, thread_id) VALUES (5000, 4000);
+INSERT INTO users_threads (user_id, thread_id) VALUES (5000, 2000);
 
 INSERT INTO posts (post_id, group_id, author_id, title, content) VALUES (6000, 1000, 5001, 'Fodbold på torsdag', 'HUSK BOLDEN DENNE GANG!!');
                                                                             
