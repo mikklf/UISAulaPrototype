@@ -31,7 +31,9 @@ def load_user(user_id):
     else:
         return None
 
-
+#
+# Models
+#
 class Group(tuple):
     def __init__(self, group_data):
         self.group_id = group_data[0]
@@ -49,19 +51,19 @@ class Message(tuple):
 
 class Post(tuple):
     def __init__(self, post_data):
-        self.post_id = message_data[0]
-        self.group_id = message_data[1]
-        self.author_id = message_data[2]
-        self.title = message_data[3]
-        self.content = message_data[4]
-        self.created_date = message_data[5]
+        self.post_id = post_data[0]
+        self.group_id = post_data[1]
+        self.author_id = post_data[2]
+        self.title = post_data[3]
+        self.content = post_data[4]
+        self.created_date = post_data[5]
 
 class Thread(tuple):
     def __init__(self, thread_data):
-        self.thread_id = message_data[0]
-        self.title = message_data[1]
-        self.group_id = message_data[2]
-        self.creator_id = message_data[3]
+        self.thread_id = thread_data[0]
+        self.title = thread_data[1]
+        self.group_id = thread_data[2]
+        self.creator_id = thread_data[3]
 
 class User(tuple, UserMixin):
     def __init__(self, user_data):
@@ -72,6 +74,10 @@ class User(tuple, UserMixin):
         self.email = user_data[4]
         self.address = user_data[5]
         self.role = user_data[6]
+
+#
+# SQL
+#
 
 
 
