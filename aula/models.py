@@ -65,80 +65,24 @@ class User(tuple, UserMixin):
         self.address = user_data[5]
         self.role = user_data[6]
 
-#
-# SQL
-#
-def get_user_by_id(id):
-    cur = conn.cursor()
-    sql = """
-    SELECT * FROM users
-    WHERE id = %s
-    """
-    cur.execute(sql, (id,))
-    user = Customers(cur.fetchone()) if cur.rowcount > 0 else None;
-    cur.close()
-    return user
-
-
-
-class Customers(tuple, UserMixin):
-    def __init__(self, user_data):
-        self.CPR_number = user_data[0]
-        self.risktype = False
-        self.password = user_data[2]
-        self.name = user_data[3]
-        self.address = user_data[4]
-
-    def get_id(self):
-       return (self.CPR_number)
-
-class Employees(tuple, UserMixin):
-    def __init__(self, employee_data):
-        self.id = employee_data[0]
-        self.name = employee_data[1]
-        self.password = employee_data[2]
-
-    def get_id(self):
-       return (self.id)
-
-class CheckingAccount(tuple):
-    def __init__(self, user_data):
-        self.id = user_data[0]
-        self.create_date = user_data[1]
-        self.CPR_number = user_data[2]
-        self.amount = 0
-
-class InvestmentAccount(tuple):
-    def __init__(self, user_data):
-        self.id = user_data[0]
-        self.start_date = user_data[1]
-        self.maturity_date = user_data[2]
-        self.amount = 0
-
-class Transfers(tuple):
-    def __init__(self, user_data):
-        self.id = user_data[0]
-        self.amount = user_data[1]
-        self.transfer_date = user_data[2]
-
 def insert_users(user_id, first_name, last_name, password, email, adresse, role):
     cur = conn.cursor()
-    sql = """
+    sql_call = """
     INSERT INTO Customers(user_id, first_name, last_name, password, email, adresse, role)
     VALUES (%s, %s, %s, %s, %s, %s, %s)
     """
-    cur.execute(sql, (user_id, first_name, last_name, password, email, adresse, role))
+    cur.execute(sql_call, (user_id, first_name, last_name, password, email, adresse, role))
     # Husk commit() for INSERT og UPDATE, men ikke til SELECT!
     conn.commit()
     cur.close()
 
 def select_users(user_id):
     cur = conn.cursor()
-    sql = """
+    sql_call = """
     SELECT * FROM users
     WHERE user_id = %s
     """
-    cur.execute(sql, (user_id,))
-    user = Customers(cur.fetchone()) if cur.rowcount > 0 else None;
+    cur.execute(sql_call, (user_id,))
+    user = User(cur.fetchone()) if cur.rowcount > 0 else None
     cur.close()
     return user
