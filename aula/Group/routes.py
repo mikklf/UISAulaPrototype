@@ -7,9 +7,6 @@ Group = Blueprint('Group', __name__)
 
 @Group.route("/groups/index", methods=['GET'])
 def index():
-    user = select_users_by_id(5000)
-    groups = user.get_groups()
-    for group in groups:
-        print(group.name)
-    return "hej"
+    groups = current_user.get_groups()
+    return render_template('groups.html', groups=groups)
 
