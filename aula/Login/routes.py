@@ -29,9 +29,9 @@ def login():
     form = UserLoginForm()
     # Først bekræft, at inputtet fra formen er gyldigt... (f.eks. ikke tomt)
     if form.validate_on_submit():
-        user = select_users(form.id.data)
+        user = select_users(form.user_id.data)
         # Derefter tjek om hashet af adgangskoden passer med det fra databasen...
-        if user != None and bcrypt.check_password_hash(user[2], form.password.data):
+        if user != None and bcrypt.check_password_hash(user[3], form.password.data):
             login_user(user, remember=form.remember.data)
             flash('Login successful.','success')
             next_page = request.args.get('next')

@@ -65,6 +65,9 @@ class User(tuple, UserMixin):
         self.address = user_data[5]
         self.role = user_data[6]
 
+    def get_id(self):
+           return (self.user_id)
+
 def insert_users(user_id, first_name, last_name, password, email, adresse, role):
     cur = conn.cursor()
     sql_call = """
