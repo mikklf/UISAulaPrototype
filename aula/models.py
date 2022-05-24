@@ -79,7 +79,7 @@ class User(tuple, UserMixin):
         for group_data in groups:
             result.append(Group(group_data))
         cur.close()
-        return result 
+        return result
 
 
 def insert_users(user_id, first_name, last_name, password, email, adresse, role):
