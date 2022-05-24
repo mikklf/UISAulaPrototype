@@ -7,19 +7,15 @@ from psycopg2 import sql
 def load_user(user_id):
     cur = conn.cursor()
 
-    schema = 'users'
-    _id = 'user_id'
-
-    user_sql = sql.SQL("""
-    SELECT * FROM {}
-    WHERE {} = %s
-    """).format(sql.Identifier(schema),  sql.Identifier(_id))
+    user_sql = """
+    SELECT * FROM users
+    WHERE user_id = %s
+    """
 
     cur.execute(user_sql, (user_id,))
-    if cur.rowcount > 0:
-        User(cur.fetchone())
-    else:
-        return None
+    user = User(cur.fetchone()) if cur.rowcount > 0 else None
+    cur.close()
+    return user
 
 #
 # Models
@@ -100,3 +96,14 @@ def select_users_by_email(email):
     user = User(cur.fetchone()) if cur.rowcount > 0 else None
     cur.close()
     return user
+
+def get_posts_for_user(user_id):
+    cur = conn.cursor()
+    sql_call = """
+    SELECT * FROM posts
+    """
+    cur.execute(sql_call, ())
+    posts = [Post(i) for i in cur.fetchmany(10)]
+    print(posts)
+    cur.close()
+    return posts

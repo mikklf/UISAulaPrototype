@@ -1,18 +1,22 @@
 from flask import render_template, Blueprint, redirect, url_for, flash, request
-from flask_login import current_user, login_user
+from flask_login import current_user, login_user, logout_user, login_required
 
 from aula import bcrypt
 from aula.forms import UserLoginForm
-from aula.models import select_users_by_email
+from aula.models import select_users_by_email, get_posts_for_user
 
 Login = Blueprint('Login', __name__)
-
-posts = [{}]
 
 
 @Login.route("/")
 @Login.route("/home")
 def home():
+    print(current_user.is_authenticated)
+    if current_user.is_authenticated:
+        posts = get_posts_for_user(current_user.get_id())
+    else:
+        posts = []
+    print(posts)
     return render_template('home.html', posts=posts)
 
 
@@ -41,13 +45,13 @@ def login():
     return render_template('login.html', title='Login', form=form)
 
 
-# @Login.route("/logout")
-# def logout():
-#     logout_user()
-#     return redirect(url_for('Login.home'))
+@Login.route("/logout")
+def logout():
+    logout_user()
+    return redirect(url_for('Login.home'))
 
 
-# @Login.route("/account")
-# @login_required
-# def account():
-#     return render_template('account.html', title='Account')
+@Login.route("/account")
+@login_required
+def account():
+    return render_template('account.html', title='Account')
