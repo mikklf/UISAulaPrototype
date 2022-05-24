@@ -1,3 +1,5 @@
+\i schema_drop.sql;
+
 CREATE TABLE IF NOT EXISTS users (
     user_id SERIAL PRIMARY KEY,
     first_name varchar(64) NOT NULL,
