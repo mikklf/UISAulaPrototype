@@ -5,8 +5,9 @@ import sys, datetime
 
 Group = Blueprint('Group', __name__)
 
-@Group.route("/groups/index", methods=['GET'])
+@Group.route("/groups", methods=['GET'])
 def index():
+    current_user.join_group(1000)
     groups = current_user.get_groups()
     return render_template('groups.html', groups=groups)
 

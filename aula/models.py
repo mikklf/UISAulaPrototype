@@ -66,16 +66,35 @@ class User(tuple, UserMixin):
 
     def get_groups(self):
         cur = conn.cursor()
-        sql_call = f"""
-        SELECT groups.* FROM users_groups JOIN groups ON users_groups.group_id = groups.group_id WHERE users_groups.user_id = {self.user_id}
+        sql_call = """
+        SELECT groups.* FROM users_groups JOIN groups ON users_groups.group_id = groups.group_id WHERE users_groups.user_id = %s
         """
-        cur.execute(sql_call)
+        cur.execute(sql_call, (self.user_id,))
         groups = cur.fetchall()
         result = []
         for group_data in groups:
             result.append(Group(group_data))
         cur.close()
         return result
+
+    def leave_group(self, group_id):
+        # TODO: Tjek om brugeren må forlade gruppen
+        cur = conn.cursor()
+        sql_call = """
+        DELETE FROM users_groups WHERE user_id = %s AND group_id = %s
+        """
+        cur.execute(sql_call, (self.user_id, group_id))
+        conn.commit()
+        cur.close()
+
+    def join_group(self, group_id):
+        cur = conn.cursor()
+        sql_call = """
+        INSERT INTO users_groups VALUES (%s, %s)
+        """
+        cur.execute(sql_call, (self.user_id, group_id))
+        conn.commit()
+        cur.close()
 
 
 def insert_users(user_id, first_name, last_name, password, email, adresse, role):
