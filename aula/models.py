@@ -15,7 +15,7 @@ def load_user(user_id):
     WHERE {} = %s
     """).format(sql.Identifier(schema),  sql.Identifier(_id))
 
-    cur.execute(user_sql, (int(user_id),))
+    cur.execute(user_sql, (user_id,))
     if cur.rowcount > 0:
         User(cur.fetchone())
     else:
@@ -79,13 +79,24 @@ def insert_users(user_id, first_name, last_name, password, email, adresse, role)
     conn.commit()
     cur.close()
 
-def select_users(user_id):
+def select_users_by_id(user_id):
     cur = conn.cursor()
     sql_call = """
     SELECT * FROM users
     WHERE user_id = %s
     """
     cur.execute(sql_call, (user_id,))
+    user = User(cur.fetchone()) if cur.rowcount > 0 else None
+    cur.close()
+    return user
+
+def select_users_by_email(email):
+    cur = conn.cursor()
+    sql_call = """
+    SELECT * FROM users
+    WHERE email = %s
+    """
+    cur.execute(sql_call, (email,))
     user = User(cur.fetchone()) if cur.rowcount > 0 else None
     cur.close()
     return user
