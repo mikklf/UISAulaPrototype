@@ -83,6 +83,17 @@ def insert_Customers(name, CPR_number, password):
     conn.commit()
     cur.close()
 
+def insert_Employees(id, name, password):
+    cur = conn.cursor()
+    sql = """
+    INSERT INTO Employees(id, name, password)
+    VALUES (%s, %s, %s)
+    """
+    cur.execute(sql, (id, name, password))
+    # Husk commit() for INSERT og UPDATE, men ikke til SELECT!
+    conn.commit()
+    cur.close()
+
 def select_Customers(CPR_number):
     cur = conn.cursor()
     sql = """
@@ -104,6 +115,16 @@ def select_Employees(id):
     user = Employees(cur.fetchone()) if cur.rowcount > 0 else None;
     cur.close()
     return user
+
+def select_all_Employees():
+    cur = conn.cursor()
+    sql = """
+    SELECT * FROM Employees
+    """
+    cur.execute(sql)
+    tuple_resultset = cur.fetchall()
+    cur.close()
+    return tuple_resultset
 
 def update_CheckingAccount(amount, CPR_number):
     cur = conn.cursor()
