@@ -1,6 +1,8 @@
 {% extends "layout.html" %}
 {% block content %}
-    <h1>{{ current_user.name }}</h1>
+    <h1>Hej, {{ current_user.first_name }} {{ current_user.first_name }}</h1>
+    <hr>
+    <h2>Opslag</h2>
     {% for post in posts %}
         <article class="media content-section">
           <div class="media-body">
