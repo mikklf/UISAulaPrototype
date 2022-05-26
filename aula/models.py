@@ -24,7 +24,7 @@ class Group(tuple):
     def __init__(self, group_data):
         self.group_id = group_data[0]
         self.name = group_data[1]
-        self.leaveable = group_data[2]
+        self.hidden = group_data[2]
         self.parents_can_post = group_data[3]
         super().__init__()
 
@@ -39,6 +39,20 @@ class Group(tuple):
         result = []
         for post_data in Posts:
             result.append(Post(post_data))
+        cur.close()
+        return result
+
+    def get_threads(self):
+        cur = conn.cursor()
+        sql_call = """
+        SELECT * FROM threads
+        WHERE threads.group_id = %s
+        """
+        cur.execute(sql_call, (self.group_id,))
+        Thread = Thread(cur.fetchall()) if cur.rowcount > 0 else None
+        result = []
+        for thread_data in Thread:
+            result.append(Thread(thread_data))
         cur.close()
         return result
 
@@ -121,8 +135,8 @@ class User(tuple, UserMixin):
         sql_call = """
         SELECT groups.* FROM groups INNER JOIN users_groups ON groups.group_id = users_groups.group_id WHERE users_groups.user_id = %s 
         UNION
-        SELECT groups.* FROM groups WHERE groups.leaveable = TRUE
-        ORDER BY leaveable DESC, name DESC
+        SELECT groups.* FROM groups WHERE groups.hidden = TRUE
+        ORDER BY hidden DESC, name DESC
         """
         cur.execute(sql_call, (self.user_id,))
         groups = cur.fetchall()
@@ -151,7 +165,23 @@ class User(tuple, UserMixin):
         conn.commit()
         cur.close()
     
+    def get_allh_threads(self):
 
+        cur = conn.cursor()
+        sql_call = """
+        SELECT * FROM threads WHERE group_id = 
+        (SELECT groups.group_id FROM 
+        groups INNER JOIN users_groups ON groups.group_id = users_groups.group_id 
+        WHERE users_groups.user_id = %s )
+        """
+        cur.execute(sql_call, (self.group_id,))
+        Thread = Thread(cur.fetchall()) if cur.rowcount > 0 else None
+        result = []
+        for thread_data in Thread:
+            result.append(Thread(thread_data))
+        cur.close()
+        return result
+     
 
 
 def insert_users(user_id, first_name, last_name, password, email, adresse, role):
