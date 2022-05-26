@@ -129,6 +129,16 @@ class User(tuple, UserMixin):
         cur.close()
         return result
 
+    def is_member_of_group(group_id):
+        cur = conn.cursor()
+        sql_call = """
+        SELECT * FROM users_groups WHERE user_id = %s AND group_id = %s
+        """
+        cur.execute(sql_call, (self.user_id, group_id))
+        result = cur.fetchone()
+        return cur.rowcount > 0
+
+
     def get_groups_joinable(self):
         cur = conn.cursor()
         sql_call = """
@@ -229,4 +239,15 @@ def get_posts_for_user(user_id):
     user = [Post(i) for i in cur.fetchmany(50)] if cur.rowcount > 0 else []
     cur.close()
     return user
+
+def get_group(group_id):
+    cur = conn.cursor()
+    sql = """
+    SELECT * FROM groups
+    WHERE group_id = %s
+    """
+    cur.execute(sql, (group_id,))
+    group = Group(cur.fetchone()) if cur.rowcount > 0 else None
+    cur.close()
+    return group
 

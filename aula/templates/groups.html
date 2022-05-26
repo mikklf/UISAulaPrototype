@@ -6,7 +6,7 @@
         {% for group in groups %}
         <div class="card">
             <div class="card-body">
-                {{ group.name }}
+                <p><a class="" href="{{ url_for('Group.show', group_id = group.group_id) }}">{{ group.name }}</a></p>
             </div>
           </div>
         {% endfor %}
