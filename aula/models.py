@@ -25,7 +25,6 @@ class Group(tuple):
         self.group_id = group_data[0]
         self.name = group_data[1]
         self.hidden = group_data[2]
-        self.parents_can_post = group_data[3]
         super().__init__()
 
     def get_posts(self):
