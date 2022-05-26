@@ -28,6 +28,20 @@ class Group(tuple):
         self.parents_can_post = group_data[3]
         super().__init__()
 
+    def get_posts(self):
+        cur = conn.cursor()
+        sql_call = """
+        SELECT * FROM posts
+        WHERE group_id = %s
+        """
+        cur.execute(sql_call, (self.group_id,))
+        Posts = Posts(cur.fetchall()) if cur.rowcount > 0 else None
+        result = []
+        for post_data in Posts:
+            result.append(Post(post_data))
+        cur.close()
+        return result
+
 class Message(tuple):
     def __init__(self, message_data):
         self.message_id = message_data[0]
@@ -82,6 +96,22 @@ class User(tuple, UserMixin):
         cur.close()
         return result
 
+    def get_groups_joinable(self):
+        cur = conn.cursor()
+        sql_call = """
+        SELECT groups.* FROM groups INNER JOIN users_groups ON groups.group_id = users_groups.group_id WHERE users_groups.user_id = %s 
+        UNION
+        SELECT groups.* FROM groups WHERE groups.leaveable = TRUE
+        ORDER BY leaveable DESC, name DESC
+        """
+        cur.execute(sql_call, (self.user_id,))
+        groups = cur.fetchall()
+        result = []
+        for group_data in groups:
+            result.append(Group(group_data))
+        cur.close()
+        return result
+
     def leave_group(self, group_id):
         # TODO: Tjek om brugeren må forlade gruppen
         cur = conn.cursor()
@@ -100,6 +130,8 @@ class User(tuple, UserMixin):
         cur.execute(sql_call, (self.user_id, group_id))
         conn.commit()
         cur.close()
+    
+
 
 
 def insert_users(user_id, first_name, last_name, password, email, adresse, role):
@@ -148,3 +180,4 @@ def get_posts_for_user(user_id):
     user = [Post(i) for i in cur.fetchmany(50)] if cur.rowcount > 0 else []
     cur.close()
     return user
+
