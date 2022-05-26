@@ -144,7 +144,7 @@ class User(tuple, UserMixin):
         cur.close()
         return result
 
-    def is_member_of_group(group_id):
+    def is_member_of_group(self, group_id):
         cur = conn.cursor()
         sql_call = """
         SELECT * FROM users_groups WHERE user_id = %s AND group_id = %s
