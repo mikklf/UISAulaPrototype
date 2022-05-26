@@ -26,6 +26,7 @@ class Group(tuple):
         self.name = group_data[1]
         self.leaveable = group_data[2]
         self.parents_can_post = group_data[3]
+        super().__init__()
 
     def get_posts(self):
         cur = conn.cursor()
@@ -48,6 +49,7 @@ class Message(tuple):
         self.thread_id = message_data[2]
         self.author_id = message_data[3]
         self.created_date = message_data[4]
+        super().__init__()
 
 class Post(tuple):
     def __init__(self, post_data):
@@ -57,6 +59,7 @@ class Post(tuple):
         self.title = post_data[3]
         self.content = post_data[4]
         self.created_date = post_data[5]
+        super().__init__()
 
 class Thread(tuple):
     def __init__(self, thread_data):
@@ -64,6 +67,7 @@ class Thread(tuple):
         self.title = thread_data[1]
         self.group_id = thread_data[2]
         self.creator_id = thread_data[3]
+        super().__init__()
 
 class User(tuple, UserMixin):
     def __init__(self, user_data):
@@ -74,6 +78,7 @@ class User(tuple, UserMixin):
         self.email = user_data[4]
         self.address = user_data[5]
         self.role = user_data[6]
+        super().__init__()
 
     def get_id(self):
         return self.user_id
