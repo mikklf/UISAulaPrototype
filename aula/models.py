@@ -102,6 +102,21 @@ class Thread(tuple):
         self.creator_id = thread_data[3]
         super().__init__()
 
+    def get_message(self):
+        cur = conn.cursor()
+        sql_call = """
+        SELECT * FROM message
+        WHERE message.thread_id = %s.thread_id
+        """
+        cur.execute(sql_call, (self.group_id,))
+        Thread = Thread(cur.fetchall()) if cur.rowcount > 0 else None
+        result = []
+        for thread_data in Thread:
+            result.append(Thread(thread_data))
+        cur.close()
+        return result
+        
+
 class User(tuple, UserMixin):
     def __init__(self, user_data):
         self.user_id = user_data[0]
@@ -135,7 +150,7 @@ class User(tuple, UserMixin):
         SELECT groups.* FROM groups INNER JOIN users_groups ON groups.group_id = users_groups.group_id WHERE users_groups.user_id = %s 
         UNION
         SELECT groups.* FROM groups WHERE groups.hidden = TRUE
-        ORDER BY hidden DESC, name DESC
+        ORDER BY hidden ASC, name DESC
         """
         cur.execute(sql_call, (self.user_id,))
         groups = cur.fetchall()
@@ -164,7 +179,7 @@ class User(tuple, UserMixin):
         conn.commit()
         cur.close()
     
-    def get_allh_threads(self):
+    def get_all_threads(self):
 
         cur = conn.cursor()
         sql_call = """
