@@ -13,29 +13,27 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE TABLE IF NOT EXISTS groups (
     group_id SERIAL PRIMARY KEY,
     name varchar(64) NOT NULL UNIQUE,
-    leaveable boolean DEFAULT TRUE,
-    parents_can_post boolean DEFAULT FALSE
+    hidden boolean DEFAULT TRUE
 );
 
 CREATE TABLE IF NOT EXISTS threads (
     thread_id SERIAL PRIMARY KEY,
     title varchar(64) NOT NULL,
-    group_id integer REFERENCES groups(group_id),
-    creator_id integer REFERENCES users(user_id)
+    group_id integer REFERENCES groups(group_id) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS messages (
     message_id SERIAL PRIMARY KEY,
     content text NOT NULL,
-    thread_id integer REFERENCES threads(thread_id),
-    author_id integer REFERENCES users(user_id),
+    thread_id integer REFERENCES threads(thread_id) NOT NULL,
+    author_id integer REFERENCES users(user_id) NOT NULL,
     created_date timestamp NOT NULL DEFAULT now()
 );
 
 CREATE TABLE IF NOT EXISTS posts (
     post_id SERIAL PRIMARY KEY,
-    group_id integer REFERENCES groups(group_id),
-    author_id integer REFERENCES users(user_id),
+    group_id integer REFERENCES groups(group_id) NOT NULL,
+    author_id integer REFERENCES users(user_id) NOt NULL,
     title varchar(64) NOT NULL,
     content text NOT NULL,
     created_date timestamp NOT NULL DEFAULT now()
@@ -43,13 +41,13 @@ CREATE TABLE IF NOT EXISTS posts (
 
 -- Relationships
 CREATE TABLE IF NOT EXISTS users_threads (
-    user_id integer REFERENCES users(user_id),
-    thread_id integer REFERENCES threads(thread_id),
+    user_id integer REFERENCES users(user_id) NOT NULL,
+    thread_id integer REFERENCES threads(thread_id) NOT NULL,
     PRIMARY KEY (user_id, thread_id)
 );
 
 CREATE TABLE IF NOT EXISTS users_groups (
-    user_id integer REFERENCES users(user_id),
-    group_id integer REFERENCES groups(group_id),
+    user_id integer REFERENCES users(user_id) NOT NULL,
+    group_id integer REFERENCES groups(group_id) NOT NULL,
     PRIMARY KEY (user_id, group_id)
 );
