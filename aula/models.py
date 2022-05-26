@@ -55,11 +55,13 @@ class Post(tuple):
     def __init__(self, post_data):
         self.post_id = post_data[0]
         self.group_id = post_data[1]
+        self.group_name = ""
         self.author_id = post_data[2]
-        self.author = ""
+        self.author_name = ""
         self.title = post_data[3]
         self.content = post_data[4]
         self.created_date = post_data[5]
+        self._get_group_name()
         self._get_author_name()
         super().__init__()
 
@@ -69,7 +71,15 @@ class Post(tuple):
         SELECT first_name, last_name FROM users WHERE user_id = %s
         """
         cur.execute(sql_call, (self.author_id,))
-        self.author = ' '.join(cur.fetchone())
+        self.author_name = ' '.join(cur.fetchone())
+
+    def _get_group_name(self):
+        cur = conn.cursor()
+        sql_call = """
+        SELECT name FROM groups WHERE group_id = %s
+        """
+        cur.execute(sql_call, (self.group_id,))
+        self.group_name = cur.fetchone()[0]
 
 class Thread(tuple):
     def __init__(self, thread_data):

@@ -13,6 +13,13 @@ h1, h2, h3, h4, h5, h6 {
   margin-bottom: 120px;
 }
 
+.group-name {
+  position: relative;
+  right: 0;
+  bottom: 0;
+  text-align: right;
+}
+
 .navbar {
   padding-top: 0;
   padding-bottom: 0;
