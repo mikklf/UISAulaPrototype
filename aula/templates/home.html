@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block content %}
     {% if current_user.is_authenticated %}
-    <h1>Hej, {{ current_user.first_name }} {{ current_user.first_name }}</h1>
+    <h1>Hej, {{ current_user.first_name }} {{ current_user.last_name }}</h1>
     <hr>
     <h2>Opslag</h2>
     {% for post in posts %}
