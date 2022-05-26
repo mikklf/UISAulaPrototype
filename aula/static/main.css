@@ -13,11 +13,32 @@ h1, h2, h3, h4, h5, h6 {
   margin-bottom: 120px;
 }
 
-.group-name {
+.media-body {
   position: relative;
+}
+
+.group-name {
+  position: absolute;
+  display: block;
   right: 0;
   bottom: 0;
   text-align: right;
+  background-color: #18638f;
+  width: fit-content;
+  color: #fff;
+  font-weight: 700;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  padding-right: 8px;
+  padding-left: 8px;
+  border-radius: 4px;
+  border: none;
+  text-decoration: none !important;
+}
+
+.group-name:hover {
+  color: #fff;
+  background-color: #19425f;
 }
 
 .navbar {
@@ -36,6 +57,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .site-header .navbar-nav .nav-link {
   color: #cbd5db;
+  font-weight: 700;
   width: 100px;
   height: 100px;
   margin-top: 0;
@@ -44,13 +66,9 @@ h1, h2, h3, h4, h5, h6 {
   padding-top: 35px;
 }
 
-.site-header li > .nav-item.nav-link {
-  color: #495057;
-}
-
 .site-header .navbar-nav .nav-link:hover {
-  color: #ffffff;
-  background-color: #549ec7;
+  color: #fff;
+  background-color: #19425f;
 }
 
 .site-header .navbar-nav .nav-link.active {
