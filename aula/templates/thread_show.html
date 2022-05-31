@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+{% block content %}
+  <div class="thread content-section">
+    <h1>{{ thread.title }}</h1>
+    <hr>
+    <div class="messages">
+      {% for message in messages %}
+      {% if message.author_id == current_user.user_id %}
+      <div class="message-container self">
+      {% else %}
+      <div class="message-container">
+      {% endif %}
+        <div class="content-section message">
+          <a class="author-name" href="#">{{ message.author.first_name }}</a>
+          <p>{{ message.content }}</p>
+        </div>
+        <p class="timestamp">{{ message.created_date }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+{% endblock content %}

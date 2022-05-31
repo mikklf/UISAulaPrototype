@@ -1,8 +1,8 @@
 body {
   background: #fafafa;
   color: #333333;
-  margin-top: 5rem;
   font-family: Lato, sans-serif;
+  min-height: 80vh;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -17,6 +17,81 @@ h1, h2, h3, h4, h5, h6 {
   position: relative;
   display: flex;
   flex-direction: column;
+}
+
+.thread-name {
+  color: #333333;
+  text-decoration: none !important;
+  font-size: larger;
+}
+
+.author-name {
+  color: #333333;
+  text-decoration: underline;
+}
+
+.thread {
+  border-radius: 20px !important;
+  height: 80vh;
+}
+
+.messages {
+  display: flex;
+  flex-direction: column;
+  margin-top: auto;
+  height: 60vh;
+  overflow: scroll;
+  padding-right: 5px;
+}
+
+.message-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  position: relative;
+  margin-bottom: 10px !important;
+}
+
+.message-container .message {
+  position: inherit;
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+  max-width: 40%;
+  border-radius: 20px !important;
+  padding-top: 5px !important;
+  padding-bottom: 10px !important;
+  padding-left: 15px !important;
+  padding-right: 15px !important;
+  background-color: rgb(22, 97, 148) !important;
+  color: #ffffff !important;
+  margin-bottom: 0px !important;
+}
+
+.message-container .timestamp {
+  align-self: flex-start;
+  margin-right: 5px;
+  margin-left: 5px;
+  margin-bottom: 0;
+  font-size: small;
+}
+
+.message-container.self .timestamp {
+  align-self: flex-end;
+}
+
+.message p {
+  margin-bottom: 0;
+}
+
+.message-container.self .message {
+  background-color: rgb(84 158 199) !important;
+  right: 0;
+  align-self: flex-end;
+}
+
+.message a.author-name {
+  color: #ffffff !important;
 }
 
 .group-name {

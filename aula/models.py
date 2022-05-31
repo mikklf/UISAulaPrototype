@@ -1,4 +1,5 @@
 # write all your SQL queries in this file.
+from datetime import datetime, timedelta
 from flask_login import UserMixin
 
 from aula import conn, login_manager
@@ -61,8 +62,41 @@ class Message(tuple):
         self.content = message_data[1]
         self.thread_id = message_data[2]
         self.author_id = message_data[3]
-        self.created_date = message_data[4]
+        self.author = None
+        self._created_date = message_data[4]
+        self._get_author()
         super().__init__()
+
+    def _get_author(self):
+        cur = conn.cursor()
+        sql_call = """
+        SELECT * FROM users WHERE user_id = %s
+        """
+        cur.execute(sql_call, (self.author_id,))
+        self.author = User(cur.fetchone())
+
+    @property
+    def created_date(self):
+        now = datetime.now()
+        if now.date() == self._created_date.date():
+            return self._created_date.strftime("Idag %X")
+        elif now.date() == self._created_date.date() + timedelta(days=1):
+            return self._created_date.strftime("Igår %X")
+        elif now < self._created_date + timedelta(days=7):
+            dag = [
+                "Mandag",
+                "Tirsdag",
+                "Onsdag",
+                "Torsdag",
+                "Fredag",
+                "Lørdag",
+                "Søndag",
+            ][int(self._created_date.strftime("%w"))]
+            return self._created_date.strftime(f"{dag} %X")
+        elif now.strftime("%y") == self._created_date.strftime("%y"):
+            return self._created_date.strftime("%d/%m %X")
+        else:
+            return self._created_date.strftime("%d/%m/%y %X")
 
 class Post(tuple):
     def __init__(self, post_data):
@@ -85,7 +119,6 @@ class Post(tuple):
         """
         cur.execute(sql_call, (self.author_id,))
         self.author = User(cur.fetchone())
-        print(self.author)
 
     def _get_group(self):
         cur = conn.cursor()
@@ -100,20 +133,20 @@ class Thread(tuple):
         self.thread_id = thread_data[0]
         self.title = thread_data[1]
         self.group_id = thread_data[2]
-        self.creator_id = thread_data[3]
         super().__init__()
 
-    def get_message(self):
+    def get_messages(self):
         cur = conn.cursor()
         sql_call = """
-        SELECT * FROM message
-        WHERE message.thread_id = %s.thread_id
+        SELECT * FROM messages
+        WHERE thread_id = %s
+        ORDER BY created_date ASC
         """
-        cur.execute(sql_call, (self.group_id,))
-        Thread = Thread(cur.fetchall()) if cur.rowcount > 0 else None
+        cur.execute(sql_call, (self.thread_id,))
+        messages = cur.fetchall() if cur.rowcount > 0 else None
         result = []
-        for thread_data in Thread:
-            result.append(Thread(thread_data))
+        for message_data in messages:
+            result.append(Message(message_data))
         cur.close()
         return result
         
@@ -190,23 +223,33 @@ class User(tuple, UserMixin):
         conn.commit()
         cur.close()
 
-    def get_all_threads(self):
-
+    def get_threads(self):
         cur = conn.cursor()
         sql_call = """
-        SELECT * FROM threads WHERE group_id =
-        (SELECT groups.group_id FROM
-        groups INNER JOIN users_groups ON groups.group_id = users_groups.group_id
-        WHERE users_groups.user_id = %s )
+        SELECT * FROM threads WHERE thread_id IN
+        (
+            SELECT thread_id FROM users_threads
+            WHERE user_id = %s
+        )
         """
-        cur.execute(sql_call, (self.group_id,))
-        Thread = Thread(cur.fetchall()) if cur.rowcount > 0 else None
+        cur.execute(sql_call, (self.user_id,))
+        threads = cur.fetchall() if cur.rowcount > 0 else None
         result = []
-        for thread_data in Thread:
+        for thread_data in threads:
             result.append(Thread(thread_data))
         cur.close()
         return result
-     
+
+    def in_thread(self, thread_id):
+        cur = conn.cursor()
+        sql_call = """
+        SELECT * FROM users_threads WHERE
+        user_id = %s AND
+        thread_id = %s
+        """
+        cur.execute(sql_call, (self.user_id, thread_id))
+        return cur.rowcount > 0
+
 
 
 def insert_users(user_id, first_name, last_name, password, email, adresse, role):
@@ -266,4 +309,15 @@ def get_group(group_id):
     group = Group(cur.fetchone()) if cur.rowcount > 0 else None
     cur.close()
     return group
+
+def get_thread(thread_id):
+    cur = conn.cursor()
+    sql = """
+    SELECT * FROM threads
+    WHERE thread_id = %s
+    """
+    cur.execute(sql, (thread_id,))
+    thread = Thread(cur.fetchone()) if cur.rowcount > 0 else None
+    cur.close()
+    return thread
 

@@ -18,5 +18,5 @@ def show(group_id):
     if (group is not None):
         return render_template('group_show.html', group=group, posts=posts)
     else:
-        return "Der findes ingen gruppe med det id"
+        return f"Der findes ikke en gruppe med id {group_id}."
 

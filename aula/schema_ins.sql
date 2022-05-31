@@ -14,12 +14,26 @@ INSERT INTO public.groups(group_id, name, hidden) VALUES
 
 INSERT INTO users_groups (user_id, group_id) VALUES (5000, 1000), (5001, 1001);
 
-INSERT INTO threads(thread_id ,title, group_id) VALUES 
+INSERT INTO threads(thread_id ,title, group_id) VALUES
     (2000, 'Anbefalinger til fodboldsko?', 1000);
 
-INSERT INTO messages (message_id, content, thread_id, author_id) VALUES (4000,'Eleverne har ondt i fødderne når de spiller fodbild. Hvem kender et godt skomærke?', 2000, 5000);
+INSERT INTO messages (message_id, content, thread_id, author_id, created_date) VALUES
+    (4000,'Eleverne har ondt i fødderne når de spiller fodbild. Hvem kender et godt skomærke?', 2000, 5000, NOW() - INTERVAL '3.189 day'),
+    (4005,'Jeg tror min søn har nogle han er glad for. Jeg spørger ham lige 😀', 2000, 5002, NOW() - INTERVAL '2.951 day'),
+    (4010,'Tak 👍', 2000, 5000, NOW() - INTERVAL '1.894 day'),
+    (4001,'Er det meningen vi skal give dem sko med????', 2000, 5001, NOW() - INTERVAL '1.05 hour'),
+    (4002,'Rachel, giver du ikke dine børn sko med til fodbold?', 2000, 5002, NOW() - INTERVAL '0.95 hour'),
+    (4003,'Hvad er der galt med dig?', 2000, 5003, NOW() - INTERVAL '0.94 hour'),
+    (4004,'Jeg troede de lånte sko af skolen!', 2000, 5001, NOW() - INTERVAL '0.91 hour'),
+    (4006,'Er det noget der nogensinde sket?', 2000, 5003, NOW() - INTERVAL '0.908 hour'),
+    (4007,'Kan vi ikke godt komme tilbage til pointen?', 2000, 5000, NOW() - INTERVAL '0.9 hour'),
+    (4008,'Hvorfor er det ligepludselig mig der skal holde styr på om skolen uddeler sko eller ej?', 2000, 5001, NOW() - INTERVAL '0.898 hour'),
+    (4009,'Fordi du er dit barns mor?', 2000, 5003, NOW() - INTERVAL '0.89 hour');
 
-INSERT INTO users_threads (user_id, thread_id) VALUES (5000, 2000);
+INSERT INTO users_threads (user_id, thread_id) VALUES
+    (5000, 2000),
+    (5001, 2000),
+    (5002, 2000),
+    (5003, 2000);
 
 INSERT INTO posts (post_id, group_id, author_id, title, content) VALUES (6000, 1000, 5001, 'Fodbold på torsdag', 'HUSK BOLDEN DENNE GANG!!');
-                                                                            

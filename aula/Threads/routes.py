@@ -1,12 +1,22 @@
-from flask import render_template, url_for, flash, redirect, request, Blueprint
-from bank import app, conn, bcrypt
-from aula.forms import TransferForm, DepositForm, AddCustomerForm
-from flask_login import current_user, login_required
-import sys, datetime
+from flask import render_template, Blueprint
+from flask_login import login_required, current_user
+from aula.models import get_thread
 
-Group = Blueprint('Threads', __name__)
+Threads = Blueprint('Threads', __name__)
 
-@login_required()
-@Group.route("threads/index", methods=['GET'])
-def index():
-    return render_template()
+@Threads.route("/threads", methods=['GET'])
+@login_required
+def threads():
+    threads_data = current_user.get_threads()
+    return render_template("threads.html", threads=threads_data)
+
+@Threads.route("/threads/<int:thread_id>", methods=['GET'])
+@login_required
+def show(thread_id):
+    thread = get_thread(thread_id)
+    if thread is None:
+        return f"Der findes ikke en tråd med id {thread_id}."
+    elif not current_user.in_thread(thread_id):
+        return f"Du har ikke adgang til tråden med id {thread_id}."
+    else:
+        return render_template("thread_show.html", thread=thread, messages=thread.get_messages())
