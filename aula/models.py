@@ -331,13 +331,23 @@ def insert_thread(group_id, title):
     cur.close()
 
 def insert_group(name, hidden):
+    # Make sure we dont try to create group with same name as others
+    # Since name has UNIQUE constraint.
     cur = conn.cursor()
+    sql = """
+    SELECT COUNT(*) FROM groups WHERE name = %s
+    """
+    cur.execute(sql, (name,))
+    if cur.fetchone()[0] > 0: return False
+
+    # Do insertion
     sql = """
     INSERT INTO groups(name, hidden) VALUES (%s, %s)
     """ 
     cur.execute(sql, (name, hidden))
     conn.commit()
     cur.close()
+    return True
 
 def insert_post(group_id, author_id, title, content):
     cur = conn.cursor()

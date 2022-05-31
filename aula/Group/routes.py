@@ -29,6 +29,9 @@ def show(group_id):
 @login_required
 def create():
     form = CreateGroupForm()
-    insert_group(form.title.data, form.hidden.data)
-    flash('Gruppen blev oprettet', 'success')
+    
+    if insert_group(form.title.data, form.hidden.data):
+        flash('Gruppen blev oprettet', 'success')
+    else:
+        flash('En gruppe med det navn findes allerede', 'danger')
     return redirect(f"/groups")
