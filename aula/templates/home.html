@@ -13,7 +13,7 @@
             </div>
             <h2><a class="article-title" href="#">{{ post.title }}</a></h2>
             <p class="article-content">{{ post.content }}</p>
-            <a class="group-name" href="{{ url_for('Group.show', group_id = post.group.group_id) }}"">
+            <a class="group-name" href="{{ url_for('Group.show', group_id = post.group.group_id) }}">
               {{ post.group.name }}
             </a>
           </div>

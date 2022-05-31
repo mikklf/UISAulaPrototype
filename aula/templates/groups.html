@@ -8,7 +8,20 @@
         {% for group in groups %}
         <div class="card">
             <div class="card-body">
-                <p><a class="group-name" href="{{ url_for('Group.show', group_id = group.group_id) }}">{{ group.name }}</a></p>
+                <p>
+                    <a class="group-name" href="{{ url_for('Group.show', group_id = group.group_id) }}">{{ group.name }}</a>
+                    {% if not group.mandatory %}
+                        {% if current_user.is_member_of_group(group.group_id) %}
+                            <a class="btn btn-danger btn-sm float-right" href="{{ url_for('Group.leave', group_id = group.group_id) }}">Afmeld</a>
+                        {% else %}
+                            <a class="btn btn-success btn-sm float-right" href="{{ url_for('Group.join', group_id = group.group_id) }}">Tilmeld</a>
+                        {% endif %}
+
+                    {% else %}
+                        <a class="btn btn-secondary btn-sm float-right" href="#" disabled>Obligatorisk</a>
+                    {% endif %}
+                </p>
+                
             </div>
           </div>
         {% endfor %}

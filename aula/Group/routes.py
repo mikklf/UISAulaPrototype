@@ -35,3 +35,19 @@ def create():
     else:
         flash('En gruppe med det navn findes allerede', 'danger')
     return redirect(f"/groups")
+
+@Group.route("/groups/join/<int:group_id>", methods=['GET'])
+def join(group_id):
+    group = get_group(group_id)
+
+    current_user.join_group(group_id)
+    flash(f'Du er nu tilmeldt {group.name} gruppen', 'success')
+    return redirect(f"/groups")
+
+@Group.route("/groups/leave/<int:group_id>", methods=['GET'])
+def leave(group_id):
+    group = get_group(group_id)
+
+    current_user.leave_group(group_id)
+    flash(f'Du er frameldt {group.name} gruppen', 'success')
+    return redirect(f"/groups")
