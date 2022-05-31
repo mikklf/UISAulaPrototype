@@ -17,9 +17,11 @@ login_manager.login_message_category = 'info'
 from aula.Login.routes import Login
 from aula.Group.routes import Group
 from aula.Threads.routes import Threads
+from aula.Post.routes import Post
 
 app.register_blueprint(Login)
 app.register_blueprint(Group)
 app.register_blueprint(Threads)
+app.register_blueprint(Post)
 
 #from bank import routes
