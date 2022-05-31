@@ -15,12 +15,9 @@ login_manager.login_view = 'login'
 login_manager.login_message_category = 'info'
 
 from aula.Login.routes import Login
-# from bank.Customer.routes import Customer
-# from bank.Employee.routes import Employee
-# from bank.Pax.routes import Pax
+from aula.Group.routes import Group
+
 app.register_blueprint(Login)
-# app.register_blueprint(Customer)
-# app.register_blueprint(Employee)
-# app.register_blueprint(Pax)
+app.register_blueprint(Group)
 
 #from bank import routes

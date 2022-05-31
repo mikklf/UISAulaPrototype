@@ -6,7 +6,7 @@ import sys, datetime
 Group = Blueprint('Group', __name__)
 
 @Group.route("/groups", methods=['GET'])
-def index():
+def groups():
     groups = current_user.get_groups_joinable()
     return render_template('groups.html', groups=groups)
 

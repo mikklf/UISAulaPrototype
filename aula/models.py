@@ -195,7 +195,7 @@ class User(tuple, UserMixin):
         sql_call = """
         SELECT * FROM threads WHERE group_id = 
         (SELECT groups.group_id FROM 
-        groups INNER JOIN users_groups ON groups.group_id = users_groups.group_id 
+        groups INNER JOIN users_groups ON groups.group_id = users_groups.group_id
         WHERE users_groups.user_id = %s )
         """
         cur.execute(sql_call, (self.group_id,))
