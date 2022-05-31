@@ -25,7 +25,7 @@ class Group(tuple):
     def __init__(self, group_data):
         self.group_id = group_data[0]
         self.name = group_data[1]
-        self.hidden = group_data[2]
+        self.mandatory = group_data[2]
         super().__init__()
 
     def get_posts(self):
@@ -194,8 +194,8 @@ class User(tuple, UserMixin):
         sql_call = """
         SELECT groups.* FROM groups INNER JOIN users_groups ON groups.group_id = users_groups.group_id WHERE users_groups.user_id = %s 
         UNION
-        SELECT groups.* FROM groups WHERE groups.hidden = FALSE
-        ORDER BY hidden ASC, name DESC
+        SELECT groups.* FROM groups WHERE groups.mandatory = FALSE
+        ORDER BY mandatory ASC, name DESC
         """
         cur.execute(sql_call, (self.user_id,))
         groups = cur.fetchall()
@@ -332,7 +332,7 @@ def insert_thread(group_id, title):
     conn.commit()
     cur.close()
 
-def insert_group(name, hidden):
+def insert_group(name, mandatory):
     # Make sure we dont try to create group with same name as others
     # Since name has UNIQUE constraint.
     cur = conn.cursor()
@@ -344,9 +344,9 @@ def insert_group(name, hidden):
 
     # Do insertion
     sql = """
-    INSERT INTO groups(name, hidden) VALUES (%s, %s)
+    INSERT INTO groups(name, mandatory) VALUES (%s, %s)
     """ 
-    cur.execute(sql, (name, hidden))
+    cur.execute(sql, (name, mandatory))
     conn.commit()
     cur.close()
     return True

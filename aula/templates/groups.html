@@ -20,7 +20,7 @@
 <form method="POST" action="{{ url_for('Group.create')}}">
     <p>{{ form.title(class="form-control", placeholder="Gruppens navn") }}</p>
 
-    <p>{{ form.hidden() }} {{ form.hidden.label(class="form-check-label") }}</p>
+    <p>{{ form.mandatory() }} {{ form.mandatory.label(class="form-check-label") }}</p>
     <p>{{ form.submit(class="btn btn-primary btn-block") }}</p>
     </form>
 {% endblock sidebar %}

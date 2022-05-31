@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE TABLE IF NOT EXISTS groups (
     group_id SERIAL PRIMARY KEY,
     name varchar(64) NOT NULL UNIQUE,
-    hidden boolean DEFAULT TRUE
+    mandatory boolean DEFAULT TRUE
 );
 
 CREATE TABLE IF NOT EXISTS threads (

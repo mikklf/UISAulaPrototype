@@ -30,7 +30,7 @@ def show(group_id):
 def create():
     form = CreateGroupForm()
     
-    if insert_group(form.title.data, form.hidden.data):
+    if insert_group(form.title.data, form.mandatory.data):
         flash('Gruppen blev oprettet', 'success')
     else:
         flash('En gruppe med det navn findes allerede', 'danger')

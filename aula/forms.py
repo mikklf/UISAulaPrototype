@@ -27,7 +27,7 @@ class CreateThreadForm(FlaskForm):
 
 class CreateGroupForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
-    hidden = BooleanField('Skjul gruppe')
+    mandatory = BooleanField('Obligatorisk gruppe')
     submit = SubmitField("Opret gruppe")
 
 class CreatePostForm(FlaskForm):

@@ -8,7 +8,7 @@ INSERT INTO public.users(user_id, first_name, last_name, password, email, addres
     (5004,'Phoebe', 'Buffay', '$2b$12$KFkp1IEMGT4QrWwjPGhE3ejOv6Z3pYhx/S4qOoFbanR2sMiZqgeJO', 'phoebe@test.dk', 'Central Perk', 'parent'),
     (5005,'Ross', 'Geller', '$2b$12$KFkp1IEMGT4QrWwjPGhE3ejOv6Z3pYhx/S4qOoFbanR2sMiZqgeJO', 'ross@test.dk', 'Central Perk', 'student');
 
-INSERT INTO public.groups(group_id, name, hidden) VALUES 
+INSERT INTO public.groups(group_id, name, mandatory) VALUES 
     (1000, 'fodbold', TRUE), 
     (1001,'3a', FALSE);
 
@@ -19,8 +19,8 @@ INSERT INTO threads(thread_id ,title, group_id) VALUES
 
 INSERT INTO messages (content, thread_id, author_id, created_date) VALUES
     ('Eleverne har ondt i fødderne når de spiller fodbild. Hvem kender et godt skomærke?', 2000, 5000, NOW() - INTERVAL '3.189 day'),
-    ('Jeg tror min søn har nogle han er glad for. Jeg spørger ham lige 😀', 2000, 5002, NOW() - INTERVAL '2.951 day'),
-    ('Tak 👍', 2000, 5000, NOW() - INTERVAL '1.894 day'),
+    ('Jeg tror min søn har nogle han er glad for. Jeg spørger ham lige', 2000, 5002, NOW() - INTERVAL '2.951 day'),
+    ('Tak', 2000, 5000, NOW() - INTERVAL '1.894 day'),
     ('Er det meningen vi skal give dem sko med????', 2000, 5001, NOW() - INTERVAL '1.05 hour'),
     ('Rachel, giver du ikke dine børn sko med til fodbold?', 2000, 5002, NOW() - INTERVAL '0.95 hour'),
     ('Hvad er der galt med dig?', 2000, 5003, NOW() - INTERVAL '0.94 hour'),
