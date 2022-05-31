@@ -33,15 +33,26 @@ h1, h2, h3, h4, h5, h6 {
 .thread {
   border-radius: 20px !important;
   height: 80vh;
+  padding: 0 !important;
+}
+
+.thread h1 {
+  margin-top: 20px;
+  margin-left: 20px;
+  margin-right: 20px;
 }
 
 .messages {
   display: flex;
   flex-direction: column;
   margin-top: auto;
-  height: 60vh;
+  height: 61vh;
   overflow: scroll;
   padding-right: 5px;
+  padding-left: 20px;
+  padding-right: 20px;
+  border-top: 3px black solid;
+  border-bottom: 3px black solid;
 }
 
 .message-container {
@@ -66,6 +77,40 @@ h1, h2, h3, h4, h5, h6 {
   background-color: rgb(22, 97, 148) !important;
   color: #ffffff !important;
   margin-bottom: 0px !important;
+}
+
+.new-message form {
+  width: 100%;
+  display: flex;
+  padding: 10px;
+  padding-right: 20px;
+  padding-left: 20px;
+}
+
+.new-message form .message-box {
+  height: auto;
+  font-size: large;
+  display: flex;
+  flex-grow: 3;
+  margin-right: 10px;
+  border-radius: 10px;
+  border: 2px black solid;
+  padding: 3px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.new-message form .send:hover {
+  background-color: rgb(84 158 199);
+  border: 2px rgb(22 97 148) solid;
+}
+
+.new-message form .send {
+  color: #fff;
+  background-color: rgb(22 97 148);
+  border-radius: 10px;
+  border: 2px black solid;
+  cursor: pointer;
 }
 
 .message-container .timestamp {

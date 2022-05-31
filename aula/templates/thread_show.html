@@ -2,8 +2,7 @@
 {% block content %}
   <div class="thread content-section">
     <h1>{{ thread.title }}</h1>
-    <hr>
-    <div class="messages">
+    <div id="messages" class="messages">
       {% for message in messages %}
       {% if message.author_id == current_user.user_id %}
       <div class="message-container self">
@@ -18,5 +17,16 @@
       </div>
       {% endfor %}
     </div>
+    <div class="new-message">
+      <form method="POST" action="">
+        {{ form.hidden_tag() }}
+        {{ form.besked(class="message-box") }}
+        {{ form.submit(class="send") }}
+      </form>
+    </div>
+    <script>
+      var objDiv = document.getElementById("messages");
+      objDiv.scrollTop = objDiv.scrollHeight;
+    </script>
   </div>
 {% endblock content %}

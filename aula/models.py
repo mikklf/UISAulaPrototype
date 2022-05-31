@@ -321,3 +321,13 @@ def get_thread(thread_id):
     cur.close()
     return thread
 
+def insert_message(content, thread_id, author_id):
+    cur = conn.cursor()
+    sql_call = """
+    INSERT INTO messages(content, thread_id, author_id, created_date)
+    VALUES (%s, %s, %s, NOW())
+    """
+    cur.execute(sql_call, (content, thread_id, author_id))
+    # Husk commit() for INSERT og UPDATE, men ikke til SELECT!
+    conn.commit()
+    cur.close()
