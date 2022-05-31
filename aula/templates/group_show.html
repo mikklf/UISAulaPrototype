@@ -2,16 +2,49 @@
 {% block content %}
     <h1>{{ group.name }}</h1>
     <hr>
+    {% if posts|length == 0 %}
+      <p>Gruppen har ingen opslag endnu</p>
+    {% endif %}
     {% for post in posts %}
         <article class="media content-section">
           <div class="media-body">
             <div class="article-metadata">
-              <a class="mr-2 author-name" href="#">{{ post.author.first_name }} {{ post.author.last_name }}</a>
-              <small class="text-muted">{{ post.date_posted }}</small>
+              <a class="mr-2 author-name" href="#">{{ post.author.first_name }} {{ post.author.last_name }} </a>
+              <small class="text-muted float-right">{{ post.created_date.strftime('%H:%I %d-%m-%Y')}}</small>
             </div>
             <h2><a class="article-title" href="#">{{ post.title }}</a></h2>
             <p class="article-content">{{ post.content }}</p>
           </div>
         </article>
     {% endfor %}
+    <div class="card">
+      <div class="card-body">
+        <p style="font-weight: bold;">Skriv opslag</p>
+        <form method="POST" action="{{ url_for('Post.create')}}">
+          {{ formpost.group_id(value=group.group_id) }}
+          {{ formpost.author_id(value=current_user.user_id) }}
+        <div class="row">
+          <div class="col-md-4">{{ formpost.title(class="form-control", placeholder="Title") }}</div>
+          <div class="col-md-8">{{ formpost.content(class="form-control", placeholder="Indhold") }}</div>
+          <div class="col-md-12 mt-2">{{ formpost.submit(class="btn btn-primary btn-block btn-sm", value="Opret opslag") }}</div>
+        </div>
+        </form>
+      </div>
+    </div>
 {% endblock content %}
+
+{% block sidebar %}
+  <p style="font-weight: bold;">Gruppe tråde</p>
+  {% if threads|length == 0 %}
+      <p>Gruppen har ingen tråde endnu</p>
+  {% endif %}
+  {% for thread in threads %}
+    <p><a href="{{ url_for('Threads.show', thread_id = thread.thread_id) }}">{{ thread.title }}</a></p>
+  {% endfor %}
+  <hr>
+  <form method="POST" action="{{ url_for('Threads.create')}}">
+  {{ form.group_id(value=group.group_id) }}
+  <p>{{ form.title(class="form-control", placeholder="Trådens title") }}</p>
+  <p>{{ form.submit(class="btn btn-primary btn-block", value="Start tråd") }}</p>
+  </form>
+{% endblock sidebar %}

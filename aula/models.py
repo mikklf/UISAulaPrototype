@@ -193,7 +193,7 @@ class User(tuple, UserMixin):
         sql_call = """
         SELECT groups.* FROM groups INNER JOIN users_groups ON groups.group_id = users_groups.group_id WHERE users_groups.user_id = %s 
         UNION
-        SELECT groups.* FROM groups WHERE groups.hidden = TRUE
+        SELECT groups.* FROM groups WHERE groups.hidden = FALSE
         ORDER BY hidden ASC, name DESC
         """
         cur.execute(sql_call, (self.user_id,))
@@ -320,6 +320,33 @@ def get_thread(thread_id):
     thread = Thread(cur.fetchone()) if cur.rowcount > 0 else None
     cur.close()
     return thread
+
+def insert_thread(group_id, title):
+    cur = conn.cursor()
+    sql = """
+    INSERT INTO threads(group_id, title) VALUES (%s, %s)
+    """ 
+    cur.execute(sql, (group_id, title))
+    conn.commit()
+    cur.close()
+
+def insert_group(name, hidden):
+    cur = conn.cursor()
+    sql = """
+    INSERT INTO groups(name, hidden) VALUES (%s, %s)
+    """ 
+    cur.execute(sql, (name, hidden))
+    conn.commit()
+    cur.close()
+
+def insert_post(group_id, author_id, title, content):
+    cur = conn.cursor()
+    sql = """
+    INSERT INTO posts(group_id, author_id, title, content) VALUES (%s, %s, %s, %s)
+    """ 
+    cur.execute(sql, (group_id, author_id, title, content))
+    conn.commit()
+    cur.close()
 
 def insert_message(content, thread_id, author_id):
     cur = conn.cursor()

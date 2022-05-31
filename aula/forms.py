@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, HiddenField
 from wtforms.validators import DataRequired, Length
 
 class AddUserForm(FlaskForm):
@@ -19,3 +19,21 @@ class UserLoginForm(FlaskForm):
 class SendMessageForm(FlaskForm):
     besked = StringField('Besked', validators=[DataRequired()])
     submit = SubmitField('Send')
+
+class CreateThreadForm(FlaskForm):
+    group_id = HiddenField('GroupID', validators=[DataRequired()])
+    title = StringField('Title', validators=[DataRequired()])
+    submit = SubmitField()
+
+class CreateGroupForm(FlaskForm):
+    title = StringField('Title', validators=[DataRequired()])
+    hidden = BooleanField('Skjul gruppe')
+    submit = SubmitField("Opret gruppe")
+
+class CreatePostForm(FlaskForm):
+    title = StringField('Title', validators=[DataRequired()])
+    content = StringField('Indhold', validators=[DataRequired()])
+    author_id = HiddenField('AuthorID', validators=[DataRequired()])
+    group_id = HiddenField('GroupID', validators=[DataRequired()])
+    submit = SubmitField("Opret opslag")
+

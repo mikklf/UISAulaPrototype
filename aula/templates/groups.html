@@ -1,5 +1,7 @@
 {% extends "layout.html" %}
 {% block content %}
+    <h1>Grupper</h1>
+    <hr>
     {% if groups|length == 0%}
         <p>Ikke medlem af nogle grupper</p>
     {% else %}
@@ -12,3 +14,13 @@
         {% endfor %}
     {% endif %}
 {% endblock content %}
+
+{% block sidebar %}
+<p style="font-weight: bold;">Opret gruppe</p>
+<form method="POST" action="{{ url_for('Group.create')}}">
+    <p>{{ form.title(class="form-control", placeholder="Gruppens navn") }}</p>
+
+    <p>{{ form.hidden() }} {{ form.hidden.label(class="form-check-label") }}</p>
+    <p>{{ form.submit(class="btn btn-primary btn-block") }}</p>
+    </form>
+{% endblock sidebar %}
