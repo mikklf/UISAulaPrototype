@@ -33,6 +33,7 @@ class Group(tuple):
         sql_call = """
         SELECT * FROM posts
         WHERE group_id = %s
+        ORDER BY created_date DESC
         """
         cur.execute(sql_call, (self.group_id,))
         Posts = cur.fetchall()
@@ -293,6 +294,7 @@ def get_posts_for_user(user_id):
         SELECT group_id FROM users_groups
         WHERE user_id = %s
     )
+    ORDER BY created_date DESC
     """
     cur.execute(sql_call, (user_id,))
     user = [Post(i) for i in cur.fetchmany(50)] if cur.rowcount > 0 else []
