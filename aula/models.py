@@ -35,7 +35,7 @@ class Group(tuple):
         WHERE group_id = %s
         """
         cur.execute(sql_call, (self.group_id,))
-        Posts = cur.fetchall() if cur.rowcount > 0 else None
+        Posts = cur.fetchall()
         result = []
         for post_data in Posts:
             result.append(Post(post_data))
@@ -49,7 +49,7 @@ class Group(tuple):
         WHERE threads.group_id = %s
         """
         cur.execute(sql_call, (self.group_id,))
-        threads = cur.fetchall() if cur.rowcount > 0 else None
+        threads = cur.fetchall()
         result = []
         for thread_data in threads:
             result.append(Thread(thread_data))
@@ -143,7 +143,7 @@ class Thread(tuple):
         ORDER BY created_date ASC
         """
         cur.execute(sql_call, (self.thread_id,))
-        messages = cur.fetchall() if cur.rowcount > 0 else None
+        messages = cur.fetchall()
         result = []
         for message_data in messages:
             result.append(Message(message_data))
@@ -233,7 +233,7 @@ class User(tuple, UserMixin):
         )
         """
         cur.execute(sql_call, (self.user_id,))
-        threads = cur.fetchall() if cur.rowcount > 0 else None
+        threads = cur.fetchall()
         result = []
         for thread_data in threads:
             result.append(Thread(thread_data))
