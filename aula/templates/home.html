@@ -8,13 +8,13 @@
         <article class="media content-section">
           <div class="media-body">
             <div class="article-metadata">
-              <a class="mr-2" href="#">{{ post.author_name }}</a>
+              <a class="mr-2" href="#">{{ post.author.first_name }} {{ post.author.last_name }}</a>
               <small class="text-muted">{{ post.date_posted }}</small>
             </div>
             <h2><a class="article-title" href="#">{{ post.title }}</a></h2>
             <p class="article-content">{{ post.content }}</p>
-            <a class="group-name" href="#">
-              {{ post.group_name }}
+            <a class="group-name" href="{{ url_for('Group.show', group_id = post.group.group_id) }}"">
+              {{ post.group.name }}
             </a>
           </div>
         </article>

@@ -34,7 +34,7 @@ class Group(tuple):
         WHERE group_id = %s
         """
         cur.execute(sql_call, (self.group_id,))
-        Posts = Posts(cur.fetchall()) if cur.rowcount > 0 else None
+        Posts = cur.fetchall() if cur.rowcount > 0 else None
         result = []
         for post_data in Posts:
             result.append(Post(post_data))
@@ -48,9 +48,9 @@ class Group(tuple):
         WHERE threads.group_id = %s
         """
         cur.execute(sql_call, (self.group_id,))
-        Thread = Thread(cur.fetchall()) if cur.rowcount > 0 else None
+        threads = cur.fetchall() if cur.rowcount > 0 else None
         result = []
-        for thread_data in Thread:
+        for thread_data in threads:
             result.append(Thread(thread_data))
         cur.close()
         return result
@@ -68,31 +68,32 @@ class Post(tuple):
     def __init__(self, post_data):
         self.post_id = post_data[0]
         self.group_id = post_data[1]
-        self.group_name = ""
+        self.group = None
         self.author_id = post_data[2]
-        self.author_name = ""
+        self.author = None
         self.title = post_data[3]
         self.content = post_data[4]
         self.created_date = post_data[5]
-        self._get_group_name()
-        self._get_author_name()
+        self._get_group()
+        self._get_author()
         super().__init__()
 
-    def _get_author_name(self):
+    def _get_author(self):
         cur = conn.cursor()
         sql_call = """
-        SELECT first_name, last_name FROM users WHERE user_id = %s
+        SELECT * FROM users WHERE user_id = %s
         """
         cur.execute(sql_call, (self.author_id,))
-        self.author_name = ' '.join(cur.fetchone())
+        self.author = User(cur.fetchone())
+        print(self.author)
 
-    def _get_group_name(self):
+    def _get_group(self):
         cur = conn.cursor()
         sql_call = """
-        SELECT name FROM groups WHERE group_id = %s
+        SELECT * FROM groups WHERE group_id = %s
         """
         cur.execute(sql_call, (self.group_id,))
-        self.group_name = cur.fetchone()[0]
+        self.group = Group(cur.fetchone())
 
 class Thread(tuple):
     def __init__(self, thread_data):
@@ -188,13 +189,13 @@ class User(tuple, UserMixin):
         cur.execute(sql_call, (self.user_id, group_id))
         conn.commit()
         cur.close()
-    
+
     def get_all_threads(self):
 
         cur = conn.cursor()
         sql_call = """
-        SELECT * FROM threads WHERE group_id = 
-        (SELECT groups.group_id FROM 
+        SELECT * FROM threads WHERE group_id =
+        (SELECT groups.group_id FROM
         groups INNER JOIN users_groups ON groups.group_id = users_groups.group_id
         WHERE users_groups.user_id = %s )
         """
