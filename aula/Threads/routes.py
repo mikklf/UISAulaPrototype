@@ -17,7 +17,7 @@ def show(thread_id):
     thread = get_thread(thread_id)
     if thread is None:
         return f"Der findes ikke en tråd med id {thread_id}."
-    elif not current_user.in_thread(thread_id):
+    elif not current_user.is_member_of_group(thread.group_id):
         return f"Du har ikke adgang til tråden med id {thread_id}."
     else:
         form = SendMessageForm()
