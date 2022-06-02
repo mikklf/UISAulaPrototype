@@ -23,7 +23,7 @@ def show(thread_id):
         form = SendMessageForm()
 
         if form.validate_on_submit():
-            insert_message(form.besked.data, thread_id, current_user.user_id)
+            insert_message(form.besked.data, thread_id, current_user.cpr_num)
             return redirect(f"/threads/{thread_id}")
 
         return render_template("thread_show.html", thread=thread, messages=thread.get_messages(), form=form)

@@ -3,7 +3,7 @@ from flask_login import current_user, login_user, logout_user, login_required
 
 from aula import bcrypt
 from aula.forms import UserLoginForm
-from aula.models import select_users_by_email, get_posts_for_user
+from aula.models import select_users_by_cpr, get_posts_for_user
 
 Login = Blueprint('Login', __name__)
 
@@ -31,7 +31,7 @@ def login():
     form = UserLoginForm()
     # Først bekræft, at inputtet fra formen er gyldigt... (f.eks. ikke tomt)
     if form.validate_on_submit():
-        user = select_users_by_email(form.email.data)
+        user = select_users_by_cpr(form.cpr_num.data)
         # Derefter tjek om hashet af adgangskoden passer med det fra databasen...
         if user != None and bcrypt.check_password_hash(user[3], form.password.data):
             login_user(user, remember=form.remember.data)

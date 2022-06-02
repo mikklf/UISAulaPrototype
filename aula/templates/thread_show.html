@@ -4,7 +4,7 @@
     <h1>{{ thread.title }}</h1>
     <div id="messages" class="messages">
       {% for message in messages %}
-      {% if message.author.user_id == current_user.user_id %}
+      {% if message.author.cpr_num == current_user.cpr_num %}
       <div class="message-container self">
       {% else %}
       <div class="message-container">

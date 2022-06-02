@@ -11,7 +11,7 @@ class AddUserForm(FlaskForm):
     submit = SubmitField('Add')
 
 class UserLoginForm(FlaskForm):
-    email = StringField('Email', validators=[DataRequired()])
+    cpr_num = StringField('CPR Nummer', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
     remember = BooleanField('Remember Me')
     submit = SubmitField('Login')
