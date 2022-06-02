@@ -1,6 +1,6 @@
 from flask import render_template, Blueprint, flash, redirect
 from flask_login import current_user, login_required
-from aula.models import get_group, insert_group
+from aula.models import get_group, insert_group, group_exist
 from aula.forms import CreateThreadForm, CreateGroupForm, CreatePostForm
 
 Group = Blueprint('Group', __name__)
@@ -30,10 +30,15 @@ def show(group_id):
 def create():
     form = CreateGroupForm()
     
-    if insert_group(form.title.data, form.mandatory.data):
-        flash('Gruppen blev oprettet', 'success')
-    else:
+    # Make sure we dont try to create group with same name as others
+    # Since name has UNIQUE constraint.
+    if group_exist(form.title.data):
         flash('En gruppe med det navn findes allerede', 'danger')
+        return redirect(f"/groups")
+
+    group = insert_group(form.title.data, form.mandatory.data)
+    current_user.join_group(group.group_id)
+    flash('Gruppen blev oprettet', 'success')
     return redirect(f"/groups")
 
 @Group.route("/groups/join/<int:group_id>", methods=['GET'])
