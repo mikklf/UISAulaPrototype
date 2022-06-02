@@ -128,6 +128,8 @@ class Thread(tuple):
             "mandatory": thread_data[4]
         }
         self.group_id = thread_data[2]
+        if len(thread_data) == 6:
+            self.last_message_date = thread_data[5]
         super().__init__()
 
     def get_messages(self):
@@ -221,13 +223,19 @@ class User(tuple, UserMixin):
     def get_threads(self):
         cur = conn.cursor()
         sql_call = """
-        SELECT thread_id, title, g.group_id, g.name, g.mandatory FROM threads 
-        INNER JOIN groups g on g.group_id = threads.group_id
-        WHERE g.group_id IN
-        (
-            SELECT group_id FROM users_groups
-            WHERE user_id = %s
-        )
+        SELECT threads.thread_id, title, g.group_id, g.name, g.mandatory, lm.last_message_date FROM threads
+            INNER JOIN
+                groups g
+                ON g.group_id = threads.group_id
+            LEFT JOIN
+                (SELECT thread_id, MAX(created_date) as last_message_date FROM messages GROUP BY thread_id) lm
+                ON threads.thread_id = lm.thread_id
+            WHERE g.group_id IN
+            (
+                SELECT group_id FROM users_groups
+                WHERE user_id = %s
+            )
+        ORDER BY last_message_date DESC NULLS LAST;
         """
         cur.execute(sql_call, (self.user_id,))
         threads = cur.fetchall()
@@ -246,8 +254,6 @@ class User(tuple, UserMixin):
         """
         cur.execute(sql_call, (self.user_id, thread_id))
         return cur.rowcount > 0
-
-
 
 def insert_users(user_id, first_name, last_name, password, email, adresse, role):
     cur = conn.cursor()
