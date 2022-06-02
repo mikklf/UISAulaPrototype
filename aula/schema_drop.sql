@@ -1,4 +1,3 @@
-DROP TABLE IF EXISTS users_threads;
 DROP TABLE IF EXISTS users_groups;
 DROP TABLE IF EXISTS messages;
 DROP TABLE IF EXISTS threads;
