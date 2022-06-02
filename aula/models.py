@@ -181,7 +181,6 @@ class User(tuple, UserMixin):
         SELECT * FROM users_groups WHERE user_id = %s AND group_id = %s
         """
         cur.execute(sql_call, (self.user_id, group_id))
-        result = cur.fetchone()
         return cur.rowcount > 0
 
 
