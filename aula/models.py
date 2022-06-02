@@ -31,9 +31,11 @@ class Group(tuple):
     def get_posts(self):
         cur = conn.cursor()
         sql_call = """
-        SELECT * FROM posts
-        WHERE group_id = %s
-        ORDER BY created_date DESC
+        SELECT post_id, title, content, created_date, g.group_id, g.name, g.mandatory, u.user_id, u.first_name, u.last_name, u.email, u.address, u.role FROM posts as p
+            INNER JOIN groups g on g.group_id = p.group_id
+            INNER JOIN users u on u.user_id = p.author_id
+        WHERE p.group_id = %s
+        ORDER BY created_date DESC;
         """
         cur.execute(sql_call, (self.group_id,))
         Posts = cur.fetchall()
@@ -46,7 +48,8 @@ class Group(tuple):
     def get_threads(self):
         cur = conn.cursor()
         sql_call = """
-        SELECT * FROM threads
+        SELECT thread_id, title, g.group_id, g.name, g.mandatory FROM threads
+        INNER JOIN groups g on g.group_id = threads.group_id
         WHERE threads.group_id = %s
         """
         cur.execute(sql_call, (self.group_id,))
@@ -62,19 +65,14 @@ class Message(tuple):
         self.message_id = message_data[0]
         self.content = message_data[1]
         self.thread_id = message_data[2]
-        self.author_id = message_data[3]
-        self.author = None
-        self._created_date = message_data[4]
-        self._get_author()
+        self._created_date = message_data[3]
+        self.author = {
+            "user_id": message_data[4],
+            "first_name": message_data[5],
+            "last_name": message_data[6],
+            "role": message_data[7],
+        }
         super().__init__()
-
-    def _get_author(self):
-        cur = conn.cursor()
-        sql_call = """
-        SELECT * FROM users WHERE user_id = %s
-        """
-        cur.execute(sql_call, (self.author_id,))
-        self.author = User(cur.fetchone())
 
     @property
     def created_date(self):
@@ -102,46 +100,42 @@ class Message(tuple):
 class Post(tuple):
     def __init__(self, post_data):
         self.post_id = post_data[0]
-        self.group_id = post_data[1]
-        self.group = None
-        self.author_id = post_data[2]
-        self.author = None
-        self.title = post_data[3]
-        self.content = post_data[4]
-        self.created_date = post_data[5]
-        self._get_group()
-        self._get_author()
+        self.title = post_data[1]
+        self.content = post_data[2]
+        self.created_date = post_data[3]
+        self.group = {
+            'group_id': post_data[4],
+            'name': post_data[5],
+            'mandatory': post_data[6],
+        }
+        self.author = {
+            'user_id': post_data[7],
+            'first_name': post_data[8],
+            'last_name': post_data[9],
+            'email': post_data[10],
+            'address': post_data[11],
+            'role': post_data[12],
+        }
         super().__init__()
-
-    def _get_author(self):
-        cur = conn.cursor()
-        sql_call = """
-        SELECT * FROM users WHERE user_id = %s
-        """
-        cur.execute(sql_call, (self.author_id,))
-        self.author = User(cur.fetchone())
-
-    def _get_group(self):
-        cur = conn.cursor()
-        sql_call = """
-        SELECT * FROM groups WHERE group_id = %s
-        """
-        cur.execute(sql_call, (self.group_id,))
-        self.group = Group(cur.fetchone())
 
 class Thread(tuple):
     def __init__(self, thread_data):
         self.thread_id = thread_data[0]
         self.title = thread_data[1]
+        self.group = {
+            "group_id": thread_data[2],
+            "name": thread_data[3],
+            "mandatory": thread_data[4]
+        }
         self.group_id = thread_data[2]
         super().__init__()
 
     def get_messages(self):
         cur = conn.cursor()
         sql_call = """
-        SELECT * FROM messages
-        WHERE thread_id = %s
-        ORDER BY created_date ASC
+        SELECT message_id, content, thread_id, created_date ,u.user_id, u.first_name, u.last_name, u.role FROM messages
+            INNER JOIN users u on u.user_id = messages.author_id
+        WHERE messages.thread_id = %s;
         """
         cur.execute(sql_call, (self.thread_id,))
         messages = cur.fetchall()
@@ -227,9 +221,11 @@ class User(tuple, UserMixin):
     def get_threads(self):
         cur = conn.cursor()
         sql_call = """
-        SELECT * FROM threads WHERE thread_id IN
+        SELECT thread_id, title, g.group_id, g.name, g.mandatory FROM threads 
+        INNER JOIN groups g on g.group_id = threads.group_id
+        WHERE g.group_id IN
         (
-            SELECT thread_id FROM users_threads
+            SELECT group_id FROM users_groups
             WHERE user_id = %s
         )
         """
@@ -289,9 +285,11 @@ def select_users_by_email(email):
 def get_posts_for_user(user_id):
     cur = conn.cursor()
     sql_call = """
-    SELECT * FROM posts
-    WHERE group_id in (
-        SELECT group_id FROM users_groups
+    SELECT post_id, title, content, created_date, g.group_id, g.name, g.mandatory, u.user_id, u.first_name, u.last_name, u.email, u.address, u.role FROM posts as p
+    INNER JOIN groups g on g.group_id = p.group_id
+    INNER JOIN users u on u.user_id = p.author_id
+    WHERE g.group_id in (
+        SELECT g.group_id FROM users_groups
         WHERE user_id = %s
     )
     ORDER BY created_date DESC
@@ -315,7 +313,8 @@ def get_group(group_id):
 def get_thread(thread_id):
     cur = conn.cursor()
     sql = """
-    SELECT * FROM threads
+    SELECT thread_id, title, g.group_id, g.name, g.mandatory FROM threads
+    INNER JOIN groups g on g.group_id = threads.group_id
     WHERE thread_id = %s
     """
     cur.execute(sql, (thread_id,))
