@@ -5,6 +5,7 @@
     {% for thread in threads %}
         <div class="content-section">
             <a class="thread-name" href="{{ url_for('Threads.show', thread_id = thread.thread_id) }}"">{{thread.title}}</a>
+            <a class="float-right group-name" href="{{ url_for('Group.show', group_id = thread.group_id) }}">{{thread.group.name}}</a>
         </div>
     {% endfor %}
 {% endblock content %}

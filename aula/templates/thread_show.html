@@ -30,3 +30,8 @@
     </script>
   </div>
 {% endblock content %}
+
+{% block sidebar %}
+<a class="group-name" href="{{ url_for('Group.show', group_id = thread.group_id) }}">{{thread.group.name}}</a>
+
+{% endblock sidebar %}

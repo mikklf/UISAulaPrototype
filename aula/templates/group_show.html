@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
 {% block content %}
-    <h1>{{ group.name }}</h1>
+    <h1>{{ group.name }}   
+    </h1>
     <hr>
     {% if posts|length == 0 %}
       <p>Gruppen har ingen opslag endnu</p>
@@ -17,6 +18,8 @@
           </div>
         </article>
     {% endfor %}
+
+    {% if current_user.is_member_of_group(group.group_id) %}
     <div class="card">
       <div class="card-body">
         <p style="font-weight: bold;">Skriv opslag</p>
@@ -31,20 +34,41 @@
         </form>
       </div>
     </div>
+    {% endif %}
 {% endblock content %}
 
 {% block sidebar %}
+  {% if current_user.is_member_of_group(group.group_id) %}
   <p style="font-weight: bold;">Gruppe tråde</p>
-  {% if threads|length == 0 %}
-      <p>Gruppen har ingen tråde endnu</p>
+    {% if threads|length == 0 %}
+        <p>Gruppen har ingen tråde endnu</p>
+    {% endif %}
+    {% for thread in threads %}
+      <p><a href="{{ url_for('Threads.show', thread_id = thread.thread_id) }}">{{ thread.title }}</a></p>
+    {% endfor %}
+    <hr>
+    <form method="POST" action="{{ url_for('Threads.create')}}">
+    {{ form.group_id(value=group.group_id) }}
+    <p>{{ form.title(class="form-control", placeholder="Trådens title") }}</p>
+    <p>{{ form.submit(class="btn btn-primary btn-block", value="Start tråd") }}</p>
+    </form>
+
+  {% else %}
+
+    <p>Tilmeld dig gruppe for at se gruppe tråde og skrive opslag</p>
+    <p><a class="btn btn-success btn-sm btn-block" href="{{ url_for('Group.join', group_id = group.group_id) }}">Tilmeld</a></p>
+
   {% endif %}
-  {% for thread in threads %}
-    <p><a href="{{ url_for('Threads.show', thread_id = thread.thread_id) }}">{{ thread.title }}</a></p>
-  {% endfor %}
+
+  {% if current_user.is_member_of_group(group.group_id) %}
+  <p>
   <hr>
-  <form method="POST" action="{{ url_for('Threads.create')}}">
-  {{ form.group_id(value=group.group_id) }}
-  <p>{{ form.title(class="form-control", placeholder="Trådens title") }}</p>
-  <p>{{ form.submit(class="btn btn-primary btn-block", value="Start tråd") }}</p>
-  </form>
+    {% if group.mandatory %}
+      <a class="btn btn-secondary btn-sm disabled" href="#">Obligatorisk gruppe</a>
+    {% else %}  
+      <a class="btn btn-danger btn-sm btn-block" href="{{ url_for('Group.leave', group_id = group.group_id) }}">Forlad gruppen</a>
+    {% endif %}  
+  </p> 
+  {% endif %}   
+
 {% endblock sidebar %}

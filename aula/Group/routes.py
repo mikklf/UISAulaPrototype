@@ -47,7 +47,7 @@ def join(group_id):
 
     current_user.join_group(group_id)
     flash(f'Du er nu tilmeldt {group.name} gruppen', 'success')
-    return redirect(f"/groups")
+    return redirect(f"/groups/{group_id}")
 
 @Group.route("/groups/leave/<int:group_id>", methods=['GET'])
 def leave(group_id):
