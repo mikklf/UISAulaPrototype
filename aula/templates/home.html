@@ -20,5 +20,7 @@
         </article>
     {% endfor %}
     {% else %}
+    <h1>Forside</h1>
+    <p>Login <a href="{{ url_for('Login.login') }}">her</a></p>
     {% endif %}
 {% endblock content %}
