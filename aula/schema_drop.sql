@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS users_groups;
+DROP TABLE IF EXISTS users_in_groups;
 DROP TABLE IF EXISTS messages;
 DROP TABLE IF EXISTS threads;
 DROP TABLE IF EXISTS posts;

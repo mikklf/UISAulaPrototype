@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS posts (
 );
 
 -- Relationships
-CREATE TABLE IF NOT EXISTS users_groups (
+CREATE TABLE IF NOT EXISTS users_in_groups (
     cpr_num integer REFERENCES users(cpr_num) NOT NULL,
     group_id integer REFERENCES groups(group_id) NOT NULL,
     PRIMARY KEY (cpr_num, group_id)

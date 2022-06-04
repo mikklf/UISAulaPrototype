@@ -1,4 +1,4 @@
-TRUNCATE users, groups, threads, messages, posts, users_groups;
+TRUNCATE users, groups, threads, messages, posts, users_in_groups;
 
 INSERT INTO public.users(cpr_num, first_name, last_name, password, role) VALUES 
     (5000, 'Gordon', 'Freeman', '$2b$12$KFkp1IEMGT4QrWwjPGhE3ejOv6Z3pYhx/S4qOoFbanR2sMiZqgeJO', 'teacher'),
@@ -12,7 +12,7 @@ INSERT INTO public.groups(group_id, name, mandatory) VALUES
     (1000, 'fodbold', TRUE), 
     (1001,'3a', FALSE);
 
-INSERT INTO users_groups (cpr_num, group_id) VALUES (5000, 1000), (5001, 1001);
+INSERT INTO users_in_groups (cpr_num, group_id) VALUES (5000, 1000), (5001, 1001);
 
 INSERT INTO threads(thread_id ,title, group_id) VALUES
     (2000, 'Anbefalinger til fodboldsko?', 1000);
