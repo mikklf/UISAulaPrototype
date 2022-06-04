@@ -141,7 +141,7 @@ class Thread(tuple):
         SELECT message_id, content, thread_id, created_date ,u.cpr_num, u.first_name, u.last_name, u.role FROM messages
             INNER JOIN users u on u.cpr_num = messages.author_cpr_num
         WHERE messages.thread_id = %s
-        ORDER BY created_date DESC;
+        ORDER BY created_date ASC;
         """
         cur.execute(sql_call, (self.thread_id,))
         messages = cur.fetchall()
