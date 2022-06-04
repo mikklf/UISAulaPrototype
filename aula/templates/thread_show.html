@@ -10,7 +10,7 @@
       <div class="message-container">
       {% endif %}
         <div class="content-section message">
-          <a class="author-name" href="#">{{ message.author.first_name }}</a>
+          <a class="author-name" href="#">{{ message.author.first_name }} ({{ message.author.role }})</a>
           <p>{{ message.content }}</p>
         </div>
         <p class="timestamp">{{ message.created_date }}</p>

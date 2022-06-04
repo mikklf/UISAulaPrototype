@@ -18,6 +18,11 @@ def load_user(cpr_num):
     cur.close()
     return user
 
+def convert_role(role):
+    if   role == "student": return "Elev"
+    elif role == "parent": return "Forældre"
+    else: return "Lærer"
+
 #
 # Models
 #
@@ -70,7 +75,7 @@ class Message(tuple):
             "cpr_num": message_data[4],
             "first_name": message_data[5],
             "last_name": message_data[6],
-            "role": message_data[7],
+            "role": convert_role(message_data[7]),
         }
         super().__init__()
 
@@ -112,7 +117,7 @@ class Post(tuple):
             'cpr_num': post_data[7],
             'first_name': post_data[8],
             'last_name': post_data[9],
-            'role': post_data[10],
+            'role': convert_role(post_data[7]),
         }
         super().__init__()
 
@@ -153,7 +158,7 @@ class User(tuple, UserMixin):
         self.first_name = user_data[1]
         self.last_name = user_data[2]
         self.password = user_data[3]
-        self.role = user_data[4]
+        self.role = convert_role(user_data[4])
         super().__init__()
 
     def get_id(self):
