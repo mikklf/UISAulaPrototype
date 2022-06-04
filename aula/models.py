@@ -162,7 +162,7 @@ class User(tuple, UserMixin):
     def get_groups(self):
         cur = conn.cursor()
         sql_call = """
-        SELECT groups.* FROM users_groups JOIN groups ON users_groups.group_id = groups.group_id WHERE users_groups.cpr_num = %s
+        SELECT groups.* FROM users_in_groups JOIN groups ON users_in_groups.group_id = groups.group_id WHERE users_in_groups.cpr_num = %s
         """
         cur.execute(sql_call, (self.cpr_num,))
         groups = cur.fetchall()
@@ -175,7 +175,7 @@ class User(tuple, UserMixin):
     def is_member_of_group(self, group_id):
         cur = conn.cursor()
         sql_call = """
-        SELECT * FROM users_groups WHERE cpr_num = %s AND group_id = %s
+        SELECT * FROM users_in_groups WHERE cpr_num = %s AND group_id = %s
         """
         cur.execute(sql_call, (self.cpr_num, group_id))
         return cur.rowcount > 0
@@ -184,7 +184,7 @@ class User(tuple, UserMixin):
     def get_groups_joinable(self):
         cur = conn.cursor()
         sql_call = """
-        SELECT groups.* FROM groups INNER JOIN users_groups ON groups.group_id = users_groups.group_id WHERE users_groups.cpr_num = %s 
+        SELECT groups.* FROM groups INNER JOIN users_in_groups ON groups.group_id = users_in_groups.group_id WHERE users_in_groups.cpr_num = %s 
         UNION
         SELECT groups.* FROM groups WHERE groups.mandatory = FALSE
         ORDER BY mandatory ASC, name DESC
@@ -201,7 +201,7 @@ class User(tuple, UserMixin):
         # TODO: Tjek om brugeren må forlade gruppen
         cur = conn.cursor()
         sql_call = """
-        DELETE FROM users_groups WHERE cpr_num = %s AND group_id = %s
+        DELETE FROM users_in_groups WHERE cpr_num = %s AND group_id = %s
         """
         cur.execute(sql_call, (self.cpr_num, group_id))
         conn.commit()
@@ -210,7 +210,7 @@ class User(tuple, UserMixin):
     def join_group(self, group_id):
         cur = conn.cursor()
         sql_call = """
-        INSERT INTO users_groups VALUES (%s, %s)
+        INSERT INTO users_in_groups VALUES (%s, %s)
         """
         cur.execute(sql_call, (self.cpr_num, group_id))
         conn.commit()
@@ -228,7 +228,7 @@ class User(tuple, UserMixin):
                 ON threads.thread_id = lm.thread_id
             WHERE g.group_id IN
             (
-                SELECT group_id FROM users_groups
+                SELECT group_id FROM users_in_groups
                 WHERE cpr_num = %s
             )
         ORDER BY last_message_date DESC NULLS LAST;
@@ -280,7 +280,7 @@ def get_posts_for_user(cpr_num):
     INNER JOIN groups g on g.group_id = p.group_id
     INNER JOIN users u on u.cpr_num = p.author_cpr_num
     WHERE g.group_id in (
-        SELECT g.group_id FROM users_groups
+        SELECT g.group_id FROM users_in_groups
         WHERE cpr_num = %s
     )
     ORDER BY created_date DESC
