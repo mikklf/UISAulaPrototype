@@ -18,11 +18,6 @@ def home():
     return render_template('home.html', posts=posts)
 
 
-@Login.route("/about")
-def about():
-    return render_template('about.html', title='About')
-
-
 @Login.route("/login", methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
