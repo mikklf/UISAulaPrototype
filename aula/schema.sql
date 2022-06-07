@@ -43,3 +43,5 @@ CREATE TABLE IF NOT EXISTS users_in_groups (
     group_id integer REFERENCES groups(group_id) NOT NULL,
     PRIMARY KEY (cpr_num, group_id)
 );
+
+\i schema_ins.sql;
