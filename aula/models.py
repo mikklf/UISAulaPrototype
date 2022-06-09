@@ -285,8 +285,8 @@ def get_posts_for_user(cpr_num):
     INNER JOIN groups g on g.group_id = p.group_id
     INNER JOIN users u on u.cpr_num = p.author_cpr_num
     WHERE g.group_id in (
-        SELECT g.group_id FROM users_in_groups
-        WHERE cpr_num = %s
+        SELECT group_id FROM users_in_groups
+        WHERE cpr_num = 5001
     )
     ORDER BY created_date DESC
     """
